@@ -1,0 +1,17 @@
+# Environment secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+myenv/
+
+# dbt
+dbt/profiles.yml
+dbt/.user.yml
+dbt/logs/
+dbt/target/
+
+# Postgres data
+postgres/data/
