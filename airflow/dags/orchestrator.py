@@ -17,7 +17,7 @@ default_args = {
 dag = DAG(
     dag_id='weatherstack-api-orchestrator',
     default_args=default_args,
-    schedule=timedelta(minutes=5)
+    schedule=timedelta(hours=1)
 )
 
 with dag:
