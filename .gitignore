@@ -13,5 +13,8 @@ dbt/.user.yml
 dbt/logs/
 dbt/target/
 
+# docker
+docker/.env
+
 # Postgres data
 postgres/data/

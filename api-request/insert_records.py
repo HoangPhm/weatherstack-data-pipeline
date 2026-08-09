@@ -1,11 +1,11 @@
 import psycopg2
-from api_request import mock_fetch_data
+from api_request import mock_fetch_data, fetch_data
 
 def connect_to_db():
     try:
         conn = psycopg2.connect(
-            host = 'localhost',
-            port = 5000,
+            host = 'db',
+            port = 5432,
             dbname = 'db', 
             user = 'db_user', 
             password = 'db_psw'
@@ -72,7 +72,8 @@ def insert_records(conn, data):
 
 def main():
     try:
-        data = mock_fetch_data()
+        #data = mock_fetch_data()
+        data = fetch_data()
         conn = connect_to_db()
         create_table(conn)
         insert_records(conn, data)

@@ -10,7 +10,9 @@ def fetch_data():
         response = requests.get(api_url)
         response.raise_for_status()
         print('API Request received successfully')
-        print(response.json()) 
+        data = response.json()
+        print(data)
+        return data 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred {e}")
         raise
