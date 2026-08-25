@@ -82,14 +82,8 @@ Open Superset at `localhost:8088`, connect a database pointing at `db:5432` / `d
 
 ## Key Features / Design Decisions
 
-- **ELT, not ETL** — raw API responses are loaded into PostgreSQL as-is first (`dev.raw_weather_data`), and transformation happens afterward inside the database via dbt. This keeps raw data available for reprocessing if transformation logic changes later, and pushes compute to the database rather than the extraction script.
-- **Batch, not streaming** — the pipeline runs on a fixed hourly schedule via Airflow, not a continuous event stream. This fits the source (a polled weather API, not an event-driven feed) and keeps the architecture simple and easy to reason about.
-- **Fully containerized** — every service (Airflow, PostgreSQL, dbt, Redis, Superset) runs in Docker Compose, so the whole stack is reproducible from a clean environment (tested in GitHub Codespaces) without manual setup steps.
+- **ELT:** raw API responses are loaded into PostgreSQL as-is first (`dev.raw_weather_data`), and transformation happens afterward inside the database via dbt. This keeps raw data available for reprocessing if transformation logic changes later, and pushes compute to the database rather than the extraction script.
+- **Batch, not streaming:** the pipeline runs on a fixed hourly schedule via Airflow, not a continuous event stream. This fits the source (a polled weather API, not an event-driven feed) and keeps the architecture simple and easy to reason about.
+- **Fully containerized:** every service (Airflow, PostgreSQL, dbt, Redis, Superset) runs in Docker Compose, so the whole stack is reproducible from a clean environment (tested in GitHub Codespaces) without manual setup steps.
 - **Secrets kept out of version control** — API keys, database credentials, and dbt connection profiles are excluded via `.gitignore` and restored via GitHub Codespaces Secrets rather than committed to the repo.
 
-## Known Limitations / Future Improvements
-
-- **No idempotency on inserts** — re-running the same DAG interval currently inserts duplicate rows rather than upserting. A future version would add a unique constraint and `ON CONFLICT ... DO UPDATE` logic on the raw table.
-- **No alerting on pipeline failure** — failed DAG runs are currently only visible by checking the Airflow UI manually. Adding a notification (e.g. Slack/email on task failure) would make failures actionable without manual monitoring.
-- **No automated data quality tests** — dbt supports built-in tests (not null, unique, accepted values) which aren't yet configured on the staging models.
-- **Single data source** — currently limited to one city due to the Weatherstack free-tier plan; the extraction logic would need generalizing to support multiple locations or an alternate API (e.g. Open-Meteo).
